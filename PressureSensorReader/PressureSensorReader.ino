@@ -15,6 +15,7 @@ int sen_ready_pin = 4 ; // D4 on Micro
 Pin 3 - EOC
   - is high when a measurement and calculation has been completed
   and the data is ready to be clocked out.
+  We read from D4 in this program.
 */
 
 void setup() {

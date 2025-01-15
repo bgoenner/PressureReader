@@ -18,11 +18,17 @@ Pin 3 - EOC
   We read from D4 in this program.
 */
 
+float ref_v = 5.0 ;
+float v_out = 0.0 ;
+int analog_sensitivity = 1024 ;
+
 void setup() {
   
   // Join i2c
   Wire.begin() ;  // address as optional argument
-  pinMode(sen_ready_pin,  INPUT) ;
+  // Wire.setClock(100000) ;
+
+  pinMode(sen_ready_pin, INPUT) ;
 
   // write to serial monitor
   Serial.begin(9600) ;
@@ -32,8 +38,11 @@ void loop() {
 
   if (digitalRead(sen_ready_pin)) {
     Wire.requestFrom(sen_addr, sen_payload) ;
+    Serial.println("I2C Ready") ;
+    // Serial.println(Wire.available()) ;
 
-    while (Wire.available()) {
+    if (Wire.available()) {
+      Serial.println("I2C Available") ;
       char stat = Wire.read() ; // status byte
       /*
       0 - 1 internal math saturation has occured
@@ -66,8 +75,9 @@ void loop() {
 
   sense_val = analogRead(pr_sensor_pin) ;
   Serial.print("Analog out:") ;
-  Serial.println(sense_val) ;
+  v_out = (float)sense_val/(float)analog_sensitivity * ref_v;
+  Serial.println(v_out) ;
 
-  delay(500) ;
+  delay(200) ;
 
 }
